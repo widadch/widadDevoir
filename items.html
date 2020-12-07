@@ -1,1 +1,88 @@
 
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Examen THYP du 7 décembre 2020</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">	
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    
+</head>
+<body>
+<div id="header">
+  <h1 class="display-3">Examen THYP du 7 décembre 2020</h1>
+  <h2>Chouef Widad</h2>
+</div>
+<div id="items" class="row">
+
+</div>
+<div id="media" class="row">
+</div>
+<script>
+	let UrlAPI="https://polemika.univ-paris8.fr/omk/api/items?item_set_id=2"
+  
+  // Récupérer data
+ 	function getData(UrlAPI){
+		return d3.json(UrlAPI)
+	}
+  
+	var itemcontent=getData(UrlAPI);
+  
+  // afficher data
+	function showItems(){
+		var a = d3.json(UrlAPI).then(function(data){
+			var c=d3.select('#items').selectAll(".card mb-3").data(data).enter().append(c).append("div")
+			.attr("style","width:400px;").attr("id","divItem")
+			c.append("h6").attr("style","display: block;margin-left: auto;margin-right: auto;text-align: center;")
+                .html(d=>{ 
+                  console.log(d);
+                  let v=d["dcterms:title"][0]["@value"]				  
+                  return v;
+                        })
+                .on("click",function(d){
+                            show(d);
+                                       })
+									   
+	});
+	return a;
+	}
+	function media(){
+		var z=d3.json(UrlAPI).then(function(data){
+			var m=d3.select('#media').selectAll(".card mb-3").data(data).enter().append(m).append("div").append("h6").attr("style","display: block;margin-left: auto;margin-right: auto;text-align: center;")
+				.html(d=>{ 
+				console.log(d);
+				let v=d["o:media"][0]["@id"]
+				//ou function
+				d3.json(v).then(function(data){
+				var p=d3.select('#divItem').selectAll(".card mb-3").data(data).enter().append(p).append("img").attr("id","image").attr("style","vertical-align: middle;border-style: none;display: block;margin-left: auto;margin-right: auto; width: 50%;")
+						.attr("src", d=>{
+								return d["o:thumbnail_urls"]["large"]; 
+								}).attr("data-holder-rendered","true");}
+						);
+						
+					//ou function				  
+					return v;
+
+
+
+                        })
+                .on("click",function(d){
+                            show(d);
+                                       })
+		
+		
+	})
+	
+	
+	};
+	media();
+a=showItems();
+function show(d){
+console.log(d);
+}
+</script>
+</body>
+</html>
+      
